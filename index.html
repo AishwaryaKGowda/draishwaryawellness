@@ -16,6 +16,8 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js" async></script>
     <script src="script.js" defer></script>
   </head>
   <body>
@@ -28,11 +30,13 @@
         <span></span><span></span>
       </button>
       <nav class="main-nav" aria-label="Main navigation">
+        <a href="#shop">Shop</a>
         <a href="#services">Our care</a>
         <a href="#about">Our approach</a>
         <a href="#stories">Kind words</a>
         <a href="#contact">Contact</a>
         <a class="nav-cta" href="#booking">Book a visit <span aria-hidden="true">↗</span></a>
+        <button class="account-button" id="account-action" type="button">Log in</button>
       </nav>
     </header>
 
@@ -70,6 +74,49 @@
         <p>Personal to you<span>✳</span></p>
         <p>Made for real life<span>✳</span></p>
         <p>Wellness, at your pace<span>✳</span></p>
+      </section>
+
+      <section class="shop section-wrap" id="shop">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow"><span></span> A few thoughtful essentials</p>
+            <h2>Wellness goods,<br /><em>chosen with care.</em></h2>
+          </div>
+          <p class="section-intro">
+            Explore our first small-batch collection. Product details and pack sizes
+            should always be checked against the original label.
+          </p>
+        </div>
+        <div class="product-grid" id="product-grid" aria-live="polite">
+          <p class="shop-status" id="shop-status">Loading the current product list…</p>
+        </div>
+        <div class="shop-checkout">
+          <div class="cart-panel">
+            <p class="eyebrow"><span></span> Your basket</p>
+            <h3>Ready when <em>you are.</em></h3>
+            <div class="cart-items" id="cart-items"><p>Your basket is empty.</p></div>
+            <div class="cart-totals">
+              <p><span>Products</span><strong id="cart-subtotal">₹0</strong></p>
+              <p><span>India delivery</span><strong id="cart-shipping">₹0</strong></p>
+              <p class="cart-grand-total"><span>Total</span><strong id="cart-total">₹0</strong></p>
+            </div>
+            <p class="cart-note">₹50 flat delivery fee per order within India.</p>
+          </div>
+          <form class="product-checkout-form" id="product-checkout-form">
+            <p class="eyebrow"><span></span> Secure checkout</p>
+            <h3>Delivery details</h3>
+            <p class="checkout-account-note">Your signed-in name, email, and phone number are used for this order.</p>
+            <label for="shipping-address">Address <span>*</span><textarea id="shipping-address" name="address" rows="2" maxlength="250" required placeholder="House / street / area"></textarea></label>
+            <div class="form-row">
+              <label for="shipping-city">City <span>*</span><input id="shipping-city" name="city" maxlength="80" required /></label>
+              <label for="shipping-state">State <span>*</span><input id="shipping-state" name="state" maxlength="80" required /></label>
+            </div>
+            <label for="shipping-pincode">PIN code <span>*</span><input id="shipping-pincode" name="pincode" inputmode="numeric" autocomplete="postal-code" pattern="[0-9]{6}" maxlength="6" required /></label>
+            <button class="button button-dark form-submit" type="submit">Pay securely with Razorpay <span aria-hidden="true">↗</span></button>
+            <p class="form-privacy">Payments are verified by our server. Orders and delivery details are saved to your account.</p>
+            <p class="form-status" id="shop-checkout-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
       </section>
 
       <section class="services section-wrap" id="services">
@@ -167,7 +214,7 @@
         <div class="booking-intro">
           <p class="eyebrow"><span></span> Your time, your pace</p>
           <h2>Let’s make space<br />for <em>you.</em></h2>
-          <p>Send us an appointment request and we’ll get back to you to confirm a time that works.</p>
+          <p>Choose a preferred date and time. After secure payment, we’ll contact you to confirm availability.</p>
           <div class="booking-promise"><span>✳</span> No pressure. Just a conversation.</div>
         </div>
         <form class="booking-form" id="booking-form">
@@ -175,6 +222,7 @@
             <label for="name">Your name <span>*</span><input id="name" name="name" autocomplete="name" placeholder="e.g. Aanya Sharma" required /></label>
             <label for="phone">Phone number <span>*</span><input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="+91 98765 43210" required /></label>
           </div>
+          <label for="booking-email">Email for your payment receipt <span>*</span><input id="booking-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required readonly /></label>
           <div class="form-row">
             <label for="service">What would you like to discuss? <span>*</span>
               <select id="service" name="service" required>
@@ -187,9 +235,10 @@
             </label>
             <label for="date">Preferred date <span>*</span><input id="date" name="date" type="date" required /></label>
           </div>
-          <label for="message">Anything else you’d like us to know? <span class="optional">(optional)</span><textarea id="message" name="message" rows="3" placeholder="Share only what you're comfortable sharing"></textarea></label>
-          <button class="button button-dark form-submit" type="submit">Request an appointment <span aria-hidden="true">↗</span></button>
-          <p class="form-privacy">Your details are used only to respond to your appointment request. Please don't include sensitive medical information.</p>
+          <label for="preferred-time">Preferred time (India time) <span>*</span><input id="preferred-time" name="time" type="time" required /></label>
+          <p class="booking-price">All consultation types are <strong>₹500</strong>. Full payment is required to submit your appointment request.</p>
+          <button class="button button-dark form-submit" type="submit">Continue to secure payment <span aria-hidden="true">↗</span></button>
+          <p class="form-privacy">Your account and booking details are stored securely. This request is subject to appointment availability; please do not enter sensitive medical information.</p>
           <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
         </form>
       </section>
@@ -197,8 +246,14 @@
       <section class="contact-band" id="contact">
         <div><p class="eyebrow eyebrow-light"><span></span> We’d love to hear from you</p><h2>Questions before<br />you <em>begin?</em></h2></div>
         <div class="contact-band-action">
-          <p>Reach out for a friendly chat about booking or the kind of care that may suit you.</p>
-          <a class="button button-light" data-social="whatsapp" href="#" target="_blank" rel="noreferrer">Chat on WhatsApp <span aria-hidden="true">↗</span></a>
+          <p>Sign in, tell us what you’d like to ask, and we’ll save your enquiry before opening WhatsApp.</p>
+          <form id="enquiry-form" class="enquiry-form">
+            <label for="enquiry-message">Your enquiry <span>*</span>
+              <textarea id="enquiry-message" name="message" rows="3" maxlength="1200" required placeholder="How can we help? Please don't include sensitive medical information."></textarea>
+            </label>
+            <button class="button button-light" type="submit">Save &amp; chat on WhatsApp <span aria-hidden="true">↗</span></button>
+            <p class="form-status" id="enquiry-status" role="status" aria-live="polite"></p>
+          </form>
         </div>
       </section>
     </main>
@@ -212,13 +267,33 @@
         <p>Thoughtful care for a more balanced you.</p>
         <div class="social-links" aria-label="Social media">
           <a data-social="instagram" href="#" target="_blank" rel="noreferrer">Instagram <span aria-hidden="true">↗</span></a>
-          <a data-social="facebook" href="#" target="_blank" rel="noreferrer">Facebook <span aria-hidden="true">↗</span></a>
-          <a data-social="whatsapp" href="#" target="_blank" rel="noreferrer">WhatsApp <span aria-hidden="true">↗</span></a>
+          <a data-social="youtube" href="#" target="_blank" rel="noreferrer">YouTube <span aria-hidden="true">↗</span></a>
+          <a href="#contact">Send an enquiry <span aria-hidden="true">↗</span></a>
         </div>
       </div>
       <div class="footer-bottom"><span>© <span id="year"></span> Dr Aishwarya Wellness</span><span>Made with care, for your wellbeing.</span><a href="#home">Back to top ↑</a></div>
       <p class="footer-disclaimer">This website is for general information and appointment requests only. It does not provide medical advice or replace a consultation with a qualified healthcare professional.</p>
     </footer>
-    <a class="floating-whatsapp" data-social="whatsapp" href="#" target="_blank" rel="noreferrer" aria-label="Chat with Dr Aishwarya Wellness on WhatsApp">✳</a>
+    <a class="floating-whatsapp" href="#contact" aria-label="Start a saved WhatsApp enquiry">✳</a>
+    <dialog class="auth-dialog" id="auth-dialog" aria-labelledby="auth-title">
+      <button class="dialog-close" id="auth-close" type="button" aria-label="Close sign in dialog">×</button>
+      <p class="eyebrow"><span></span> Your wellness account</p>
+      <h2 id="auth-title">Welcome <em>in.</em></h2>
+      <div class="auth-tabs" role="tablist" aria-label="Account action">
+        <button type="button" class="auth-tab is-active" data-auth-mode="login" role="tab" aria-selected="true">Log in</button>
+        <button type="button" class="auth-tab" data-auth-mode="signup" role="tab" aria-selected="false">Create account</button>
+      </div>
+      <form class="auth-form" id="auth-form">
+        <div id="auth-profile-fields" hidden>
+          <label for="auth-name">Your name <span>*</span><input id="auth-name" name="name" autocomplete="name" /></label>
+          <label for="auth-phone">Phone number <span>*</span><input id="auth-phone" name="phone" type="tel" autocomplete="tel" minlength="7" maxlength="20" pattern="[+0-9 ()-]+" /></label>
+        </div>
+        <label for="auth-email">Email address <span>*</span><input id="auth-email" name="email" type="email" autocomplete="email" required /></label>
+        <label for="auth-password">Password <span>*</span><input id="auth-password" name="password" type="password" autocomplete="current-password" minlength="8" required /></label>
+        <button class="button button-dark form-submit" id="auth-submit" type="submit">Log in <span aria-hidden="true">↗</span></button>
+        <p class="form-status" id="auth-status" role="status" aria-live="polite"></p>
+      </form>
+      <p class="auth-privacy">By continuing, you agree that we may use your account details to manage appointments and enquiries.</p>
+    </dialog>
   </body>
 </html>

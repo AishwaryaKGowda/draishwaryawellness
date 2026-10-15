@@ -54,6 +54,15 @@ source code, or chat.
 After changing Netlify variables, trigger a new deploy so the Functions receive
 the updated values.
 
+### Local development
+
+Copy `.env.example` to `.env`, fill in the values, and start the local site with
+`npx netlify-cli dev`. Netlify Dev loads `.env` for local Functions. The `.env`
+file is excluded from Git; never commit or share it. A `.env` file in your
+repository does **not** configure deployed Netlify Functions: set the same
+values in the Netlify dashboard and redeploy. The Supabase URL and anon key
+used by the static browser app are configured separately in `script.js`.
+
 ### Payment and email setup
 
 1. Revoke any Razorpay live credentials that were shared or exposed. Create a

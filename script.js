@@ -6,8 +6,7 @@ const contactDetails = {
 
 const supabaseConfig = {
   url: "https://nestxckkpbyfjpwsuiqu.supabase.co",
-  anonKey:
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lc3R4Y2trcGJ5Zmpwd3N1aXF1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIwMzg5ODksImV4cCI6MjEwNzYxNDk4OX0.iAcLHZBIYL8QHT7eMmCogxLdzk-OwwrlzDxneh7rwkY",
+  anonKey: "sb_publishable_YjsPX8KY5cUDNT0OmQLuUg_Nb2-bBie",
 };
 
 const menuToggle = document.querySelector(".menu-toggle");
